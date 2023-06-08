@@ -1,0 +1,6 @@
+#!/bin/bash
+
+mkdir -p $SNAP_COMMON/www/
+
+cp -R $SNAP/www/* $SNAP_COMMON/www/
+
