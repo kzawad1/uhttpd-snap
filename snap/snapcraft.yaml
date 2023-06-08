@@ -1,0 +1,38 @@
+name: uhttpd
+base: core20
+version: '0.1.2'
+summary: A laughably-small HTTP server
+description: |
+  The only thing uhttpd is good for, is serving static content.
+  It has no fancy bells, orwhistles, like virtual hist, or CGI support.
+  All it does is host static files out of a directory.
+grade: stable
+confinement: strict
+parts:
+  uhttpd:
+    plugin: go
+    source: https://github.com/nesv/uhttpd.git
+    source-tag: '0.1.2'
+    override-build: |
+      go mod init uhttpd
+      go mod tidy
+      go build
+      snapcraftctl build
+    build-packages:
+      - gcc
+  uhttpd-data:
+    # See 'snapcraft plugins'
+    plugin: dump
+    source: .
+    stage: 
+    - www
+apps:
+  uhttpd:
+    command: bin/uhttpd -dir $SNAP_COMMON/www
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+hooks:
+    install:
+        plugs: [network]
